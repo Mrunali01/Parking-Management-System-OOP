@@ -5,22 +5,26 @@ using namespace std;
 
 static int countSlot=0;
 
-class Customer {
+class Customer 
+{
     string name;
     string phone;
 
 public:
-    void getCustomerDetails() {
+    void getCustomerDetails() 
+    {
         cout << "\nEnter customer details" << endl;
         cout << "NAME : ";
         cin >> name;
         cout << "PHONE : ";
         cin >> phone;
     }
-    string getName() {
+    string getName() 
+    {
         return name;
     }
-    string getPhone() {
+    string getPhone() 
+    {
         return phone;
     }
 };
@@ -34,7 +38,8 @@ class Vehicle : public Customer
     int isPaid;
 
 public:
-    void forEntry(int slot) {
+    void forEntry(int slot) 
+    {
         slotNo = slot;
         getCustomerDetails();
         cout << "Enter Vehicle Details" << endl;
@@ -46,7 +51,8 @@ public:
         string t1 = ctime(&entryTime);
         cout << "ENTRY TIME : " << t1 << endl;
     }
-    void forExit() {
+    void forExit() 
+    {
         exitTime = time(0);
         string t2 = ctime(&exitTime);
         displayTicket();
@@ -101,14 +107,13 @@ public:
         cout << "5. PARKING SLOT NUMBER : " << slotNo << endl;
         cout << "6. ENTRY TIME : " << ctime(&entryTime);
         cout << "7. EXIT TIME : " << ctime(&exitTime);
-        //cout << "8. TOTAL DURATION PARKED : "<<duration<<endl;
-        cout << "9. TOTAL CHARGES : " << calculateCharges() <<"/-"<< endl;
+        cout << "8. TOTAL CHARGES : " << calculateCharges() <<"/-"<< endl;
         cout << "------------------------------------" << endl;
         cout << "------------------------------------" << endl;
     }
     void displayDetails()
     {
-        cout << "-------DETAILS OF PARKED CAR-------"<<endl;
+        cout << "\n-------DETAILS OF PARKED CAR-------"<<endl;
         cout << "\n1. OWNER NAME : " << getName()<<endl;
         cout << "2. PHONE NUMBER : "<< getPhone()<<endl;
         cout << "3. TYPE OF VEHICLE : " << type << endl;
@@ -116,6 +121,7 @@ public:
         cout << "5. PARKING SLOT NUMBER : " << slotNo << endl;
         cout << "6. ENTRY TIME : " << ctime(&entryTime);   
         cout << "*** CAR PARKED AT SLOT NUMBER "<<slotNo<<" ***"<<endl;
+        cout << "-----------------------------------"<<endl;
     }
 };
 
