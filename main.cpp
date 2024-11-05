@@ -30,7 +30,7 @@ class Vehicle : public Customer {
     string type;
     int slotNo;
     time_t entryTime, exitTime;
-    bool isPaid;
+    int isPaid;
 
 public:
     void forEntry(int slot) {
@@ -46,15 +46,18 @@ public:
         cout << "ENTRY TIME : " << t1 << endl;
         cout << "Pay 20/- entry fees (1 for Yes, 0 for No): ";
         cin >> isPaid;
-        cout<<"Alloted slot : "<<slotNo<<endl;
     }
     void forExit() {
+        int fees;
         exitTime = time(0);
         string t2 = ctime(&exitTime);
         if (!isPaid) {
             cout << "Please pay first" << endl;
-            return;
-        } else {
+            cout << "Pay 20/- entry fees (1 for Yes, 0 for No): ";
+            cin >> fees;
+        } 
+        if(fees==1)
+        {
             cout << "Exit successful" << endl;
         }
         displayTicket();
@@ -63,22 +66,18 @@ public:
     {
         cout << "\n-----------ONLINE TICKET----------" << endl;
         cout << "------------------------------------" << endl;
-        cout << "1. Type of vehicle : " << type << endl;
-        cout << "2. Registration Number : " << regNo << endl;
-        cout << "3. Parking slot number : " << slotNo << endl;
-        cout << "4. Entry Time : " << ctime(&entryTime);
-        cout << "5. Exit Time : " << ctime(&exitTime);
-        cout << "*All Charges Paid*" << endl;
+        cout << "1. TYPE OF VEHICLE : " << type << endl;
+        cout << "2. REGISTRATION NUMBER : " << regNo << endl;
+        cout << "3. PARKING SLOT NUMBER : " << slotNo << endl;
+        cout << "4. ENTRY TIME : " << ctime(&entryTime);
+        cout << "5. EXIT TIME : " << ctime(&exitTime);
+        cout << "****All Charges Paid*****" << endl;
         cout << "------------------------------------" << endl;
         cout << "------------------------------------" << endl;
     }
     int getSlotNo() 
     { 
         return slotNo; 
-    }
-    bool isPaymentMade() 
-    { 
-        return isPaid; 
     }
 };
 
@@ -137,7 +136,17 @@ class ParkingFacility
         {
             parkingSlots[slot - 1] = false;
             occupied--;
+
+            for (auto i = vehicles.begin(); i != vehicles.end(); ++i) 
+            {
+                if (i->getSlotNo() == slot) 
+                {
+                    vehicles.erase(i);
+                    break;
+                }
+            }
         }
+
 
         int getCapacity() 
         {
@@ -227,5 +236,10 @@ int main()
                 cout << "Enter a valid choice" << endl;
         }
     }
+
+    cout << "*********************************************" << endl;
+    cout << "*******************THANK YOU*****************" << endl;
+    cout << "*********************************************" << endl;
+
     return 0;
 }
