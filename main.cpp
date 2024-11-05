@@ -11,7 +11,7 @@ class Customer {
 
 public:
     void getCustomerDetails() {
-        cout << "Enter customer details" << endl;
+        cout << "\nEnter customer details" << endl;
         cout << "NAME : ";
         cin >> name;
         cout << "PHONE : ";
@@ -25,10 +25,11 @@ public:
     }
 };
 
-class Vehicle : public Customer {
+class Vehicle : public Customer 
+{
     string regNo;
     string type;
-    int slotNo;
+    int slotNo, charges;
     time_t entryTime, exitTime;
     int isPaid;
 
@@ -44,40 +45,77 @@ public:
         entryTime = time(0);
         string t1 = ctime(&entryTime);
         cout << "ENTRY TIME : " << t1 << endl;
-        cout << "Pay 20/- entry fees (1 for Yes, 0 for No): ";
-        cin >> isPaid;
     }
     void forExit() {
-        int fees;
         exitTime = time(0);
         string t2 = ctime(&exitTime);
-        if (!isPaid) {
-            cout << "Please pay first" << endl;
-            cout << "Pay 20/- entry fees (1 for Yes, 0 for No): ";
-            cin >> fees;
-        } 
-        if(fees==1)
+        displayTicket();
+        cout<<"\n Pay "<<charges<<"/-"<<" (1 for Paid, 0 for Not Paid) : ";
+        cin>>isPaid;
+        if(isPaid==1)
         {
             cout << "Exit successful" << endl;
         }
-        displayTicket();
+        else
+        {
+            cout << "\n\nPlease pay first" << endl;
+            forExit();
+        } 
+
+    }
+
+    int getSlotNo() 
+    { 
+        return slotNo; 
+    }
+
+    int calculateCharges()
+    {
+        long long duration = exitTime - entryTime;
+        int min = duration/60;
+        int hrs = min/60;
+        int minutes = min%60;
+
+        if(hrs<=0 && minutes<=30)
+        {
+            charges = 15;
+        }
+        else if(hrs>=1)
+        {
+            charges = 25;
+        }
+        else
+        {
+            charges = 30;
+        }
+        return charges;
     }
     void displayTicket() 
     {
         cout << "\n-----------ONLINE TICKET----------" << endl;
         cout << "------------------------------------" << endl;
-        cout << "1. TYPE OF VEHICLE : " << type << endl;
-        cout << "2. REGISTRATION NUMBER : " << regNo << endl;
-        cout << "3. PARKING SLOT NUMBER : " << slotNo << endl;
-        cout << "4. ENTRY TIME : " << ctime(&entryTime);
-        cout << "5. EXIT TIME : " << ctime(&exitTime);
-        cout << "****All Charges Paid*****" << endl;
+        cout << "\n1. OWNER NAME : " << getName()<<endl;
+        cout << "2. PHONE NUMBER : "<< getPhone()<<endl;
+        cout << "3. TYPE OF VEHICLE : " << type << endl;
+        cout << "4. REGISTRATION NUMBER : " << regNo << endl;
+        cout << "5. PARKING SLOT NUMBER : " << slotNo << endl;
+        cout << "6. ENTRY TIME : " << ctime(&entryTime);
+        cout << "7. EXIT TIME : " << ctime(&exitTime);
+        //cout << "8. TOTAL DURATION PARKED : "<<duration<<endl;
+        cout << "9. TOTAL CHARGES : " << calculateCharges() <<"/-"<< endl;
         cout << "------------------------------------" << endl;
         cout << "------------------------------------" << endl;
     }
-    int getSlotNo() 
-    { 
-        return slotNo; 
+    void displayDetails()
+    {
+        cout << "-------DETAILS OF PARKED CAR-------"<<endl;
+        cout << "\n1. OWNER NAME : " << getName()<<endl;
+        cout << "2. PHONE NUMBER : "<< getPhone()<<endl;
+        cout << "3. TYPE OF VEHICLE : " << type << endl;
+        cout << "4. REGISTRATION NUMBER : " << regNo << endl;
+        cout << "5. PARKING SLOT NUMBER : " << slotNo << endl;
+        cout << "6. ENTRY TIME : " << ctime(&entryTime);   
+        cout << "*** CAR PARKED AT SLOT NUMBER "<<slotNo<<" ***"<<endl;
     }
 };
 
@@ -154,19 +192,21 @@ class ParkingFacility
         }
     };
 
-    void vehicleEntry(ParkingFacility &pl) 
+void vehicleEntry(ParkingFacility &pl) 
+{
+    if (pl.ifAvailable()) 
     {
-        if (pl.ifAvailable()) 
-        {
-            int slot = pl.getFreeSlot();
-            Vehicle obj;
-            obj.forEntry(slot);
-            pl.newVehicle(obj);
-            cout << "Entry successful" << endl;
-        } else 
-        {
-            cout << "Sorry no empty parking space available!" << endl;
-        }
+        int slot = pl.getFreeSlot();
+        Vehicle obj;
+        obj.forEntry(slot);
+        pl.newVehicle(obj);
+        cout<< "Alloted Slot : "<<slot<<endl;
+        cout << "Entry successful" << endl;
+    } 
+    else 
+    {
+        cout << "Sorry no empty parking space available!" << endl;
+    }
 }
 
 void vehicleExit(ParkingFacility &p1) 
@@ -192,19 +232,20 @@ void vehicleExit(ParkingFacility &p1)
 
 int main() 
 {
-    cout << "*********************************************" << endl;
+    cout << "\n\n************************************************" << endl;
     cout << "******WELCOME TO PARKING MANAGEMENT SYSTEM******" << endl;
-    cout << "*********************************************" << endl;
+    cout << "************************************************" << endl;
     ParkingFacility p1;
     cout << ".....saved" << endl;
 
     while (true) 
     {
-        cout << "\nChoose from below options" << endl;
+        cout << "\nChoose from below options :" << endl;
         cout << "1. ENTRY OF A CAR" << endl;
         cout << "2. EXIT OF A CAR" << endl;
         cout << "3. DISPLAY DETAILS OF A CAR" << endl;
         cout << "4. EXIT" << endl;
+        cout << "Enter your choice : ";
         int x;
         cin >> x;
         
@@ -222,24 +263,26 @@ int main()
                 int slot;
                 cout << "Enter slot number to display ticket: ";
                 cin >> slot;
-                if (Vehicle* vehicle = p1.findVehicleBySlot(slot)) {
-                    vehicle->displayTicket();
-                } else {
+                if (Vehicle* vehicle = p1.findVehicleBySlot(slot)) 
+                {
+                    vehicle->displayDetails();
+                } 
+                else 
+                {
                     cout << "No vehicle found in this slot!" << endl;
                 }
                 break;
 
             case 4:
+                cout << "*********************************************" << endl;
+                cout << "*******************THANK YOU*****************" << endl;
+                cout << "*********************************************" << endl;
                 exit(0);
 
             default:
                 cout << "Enter a valid choice" << endl;
+                break;
         }
     }
-
-    cout << "*********************************************" << endl;
-    cout << "*******************THANK YOU*****************" << endl;
-    cout << "*********************************************" << endl;
-
     return 0;
 }
